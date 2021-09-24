@@ -14,7 +14,10 @@ public class Homework1 extends DBTest {
      * Write a query in the string below that returns all artists that have an 'A' in their name
      */
     void selectArtistsWhoseNameHasAnAInIt(){
-        List<Map<String, Object>> results = executeSQL("SELECT * FROM artists");
+        List<Map<String, Object>> results = executeSQL("SELECT artists.Name\n" +
+                "FROM artists\n" +
+                "WHERE artists.Name LIKE '%A%'\n" +
+                "ORDER BY artists.Name");
         assertEquals(211, results.size());
     }
 
@@ -24,7 +27,11 @@ public class Homework1 extends DBTest {
      */
     void selectAllArtistsWithMoreThanOneAlbum(){
         List<Map<String, Object>> results = executeSQL(
-                "SELECT * FROM artists");
+                "SELECT artists.Name, count(albums.AlbumId) as NumAlbums\n" +
+                        "FROM artists\n" +
+                        "JOIN albums on albums.ArtistId = artists.ArtistId\n" +
+                        "GROUP BY artists.ArtistId\n" +
+                        "HAVING NumAlbums > 1");
 
         assertEquals(56, results.size());
         assertEquals("AC/DC", results.get(0).get("Name"));
@@ -37,8 +44,11 @@ public class Homework1 extends DBTest {
          */
     void selectTheTrackAndAlbumAndArtistForAllTracksLongerThanSixMinutes() {
         List<Map<String, Object>> results = executeSQL(
-                "SELECT tracks.Name as TrackName, albums.Title as AlbumTitle, artists.Name as ArtistsName FROM tracks " +
-                        "-- NEED TO DO SOME JOINS HERE KIDS");
+                "SELECT tracks.Milliseconds / 1000.0 / 60.0 as TrackLengthMins, tracks.Name as Track, albums.Title as Album, artists.Name as Artist\n" +
+                        "FROM tracks\n" +
+                        "JOIN albums ON tracks.AlbumId = albums.AlbumId\n" +
+                        "JOIN artists ON albums.ArtistId = artists.ArtistId\n" +
+                        "WHERE tracks.Milliseconds > 1000 * 60 * 6");
 
         assertEquals(623, results.size());
 

@@ -12,11 +12,13 @@ public class Model {
     List<String> _errors = new LinkedList<>();
 
     public boolean create() {
-        throw new UnsupportedOperationException("Needs to be implemented");
+        if (verify()) return true;
+        else return false;
     }
 
     public boolean update() {
-        throw new UnsupportedOperationException("Needs to be implemented");
+        if (verify()) return true;
+        else return false;
     }
 
     public void delete() {
@@ -24,7 +26,7 @@ public class Model {
     }
 
     public boolean verify() {
-        throw new UnsupportedOperationException("Needs to be implemented");
+        return !hasErrors();
     }
 
     public void addError(String err) {

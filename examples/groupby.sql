@@ -27,7 +27,7 @@ GROUP BY tracks.AlbumID;
 
 -- Calculate run time of albums by summing the tracks
 SELECT tracks.AlbumID, Title,
-       SUM(tracks.Milliseconds) as Milliseconds
+       SUM(tracks.Milliseconds) / 1000.0 / 60.0 as Minutes
 FROM tracks
 JOIN albums on tracks.AlbumId = albums.AlbumId
 GROUP BY tracks.AlbumID;
@@ -99,8 +99,29 @@ WHERE tracks.Name LIKE "A%"
 GROUP BY albums.ArtistId
 HAVING Tracks > 2;
 
+SELECT employees.FirstName, employees.LastName, employees.Title, managers.FirstName, managers.LastName
+FROM employees
+JOIN employees as managers ON employees.ReportsTo = managers.EmployeeId
+JOIN customers ON customers.SupportRepId = employees.EmployeeId
+WHERE managers.FirstName = 'Andrew' AND managers.LastName = 'Adams'
+GROUP BY customers.SupportRepId;
 
+SELECT employees.FirstName, employees.LastName, employees.Title, managers.FirstName, managers.LastName, count(*) AS CustomerCount
+FROM customers
+         JOIN employees as employees ON customers.SupportRepId = employees.EmployeeId
+         JOIN employees as managers ON employees.ReportsTo = managers.EmployeeId
+WHERE managers.FirstName = 'Nancy' AND managers.LastName = 'Edwards'
+GROUP BY customers.SupportRepId;
 
+SELECT tracks.Name, genres.Name as Genre
+FROM tracks
+    JOIN genres ON tracks.GenreId = genres.GenreId
+WHERE genres.Name LIKE 'Ro%';
 
+SELECT employees.FirstName, employees.LastName, employees.Email, count(*) as salesCount, sum(invoices.Total) as salesTotal
+FROM employees
+JOIN customers ON employees.EmployeeId = customers.SupportRepId
+JOIN invoices ON customers.CustomerId = invoices.CustomerId
+GROUP BY EmployeeId;
 
 

@@ -15,6 +15,7 @@ public class Artist extends Model {
 
     Long artistId;
     String name;
+    String previousName;
 
     public Artist() {
     }
@@ -41,6 +42,7 @@ public class Artist extends Model {
     }
 
     public void setName(String name) {
+        previousName = this.name;
         this.name = name;
     }
 
@@ -104,11 +106,13 @@ public class Artist extends Model {
         if (verify()) {
             try (Connection conn = DB.connect();
                  PreparedStatement stmt = conn.prepareStatement(
-                         "UPDATE artists SET Name=? WHERE ArtistId=?")) {
+                         "UPDATE artists SET Name=? WHERE Name=? AND ArtistId=?")) {
                 stmt.setString(1, this.getName());
-                stmt.setLong(2, this.getArtistId());
-                stmt.executeUpdate();
-                return true;
+                stmt.setString(2, this.previousName);
+                stmt.setLong(3, this.getArtistId());
+                int updatedRows = stmt.executeUpdate();
+                if(updatedRows>0) return true;
+                else return false;
             } catch (SQLException sqlException) {
                 throw new RuntimeException(sqlException);
             }

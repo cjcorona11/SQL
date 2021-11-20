@@ -165,6 +165,23 @@ public class Track extends Model {
         return Album.find(albumId);
     }
 
+    public static List<Track> getForPlaylist(Long playlistId){
+        try (Connection conn = DB.connect();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "SELECT * FROM tracks JOIN playlist_track ON tracks.TrackId = playlist_track.TrackId WHERE PlaylistId = ? ORDER BY tracks.Name"
+             )) {
+            stmt.setLong(1, playlistId);
+            ResultSet results = stmt.executeQuery();
+            List<Track> resultList = new LinkedList<>();
+            while (results.next()) {
+                resultList.add(new Track(results));
+            }
+            return resultList;
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }
+    }
+
     public MediaType getMediaType() {
         return null;
     }
@@ -172,7 +189,7 @@ public class Track extends Model {
         return null;
     }
     public List<Playlist> getPlaylists(){
-        return Collections.emptyList();
+        return Playlist.getForTrack(this.trackId);
     }
 
     public Long getTrackId() {
@@ -246,6 +263,7 @@ public class Track extends Model {
     public String getArtistName() {
         // TODO implement more efficiently
         //  hint: cache on this model object
+
         return getAlbum().getArtist().getName();
     }
 
@@ -253,6 +271,22 @@ public class Track extends Model {
         // TODO implement more efficiently
         //  hint: cache on this model object
         return getAlbum().getTitle();
+        /*try (Connection conn = DB.connect();
+             PreparedStatement stmt = conn.prepareStatement("SELECT *\n" +
+                     "FROM tracks\n" +
+                     "JOIN albums\n" +
+                     "ON tracks.AlbumId = albums.AlbumId\n" +
+                     "WHERE tracks.AlbumId = ?;")) {
+            stmt.setLong(1, this.albumId);
+            ResultSet results = stmt.executeQuery();
+            if (results.next()) {
+                return new Album(results);
+            } else {
+                return null;
+            }
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }*/
     }
 
     public static List<Track> advancedSearch(int page, int count,
@@ -339,11 +373,10 @@ public class Track extends Model {
     public static List<Track> all(int page, int count, String orderBy) {
         try (Connection conn = DB.connect();
              PreparedStatement stmt = conn.prepareStatement(
-                     "SELECT * FROM tracks ORDER BY ? LIMIT ? OFFSET ?"
+                     "SELECT * FROM tracks ORDER BY " + orderBy + " LIMIT ? OFFSET ?"
              )) {
-            stmt.setString(1, orderBy);
-            stmt.setInt(2, count);
-            stmt.setInt(3,count*(page-1));
+            stmt.setInt(1, count);
+            stmt.setInt(2,count*(page-1));
             ResultSet results = stmt.executeQuery();
             List<Track> resultList = new LinkedList<>();
             while (results.next()) {

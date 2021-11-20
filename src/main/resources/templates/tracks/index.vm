@@ -7,11 +7,18 @@
         <b>Search </b>
         <input type="text" placeholder="Search by track, album or artist name..."
                name="q"
+               <!---ADD HTMX HERE
+               hx-get="/tracks"
+               hx-target="#results"
+               hx-trigger="keyup delay:500ms changed"--->
                value="$!web.param('q')">
         <a href="/tracks/search">Advanced Search >></a>
     </form>
 </div>
 
+<div id=""results>
+    #parse('templates/track/table.vm')
+</div>
 <table>
     <thead>
     <tr>

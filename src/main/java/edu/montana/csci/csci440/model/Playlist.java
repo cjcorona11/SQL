@@ -23,10 +23,26 @@ public class Playlist extends Model {
         playlistId = results.getLong("PlaylistId");
     }
 
-
     public List<Track> getTracks(){
         // TODO implement, order by track name
-        return Collections.emptyList();
+        return Track.getForPlaylist(this.playlistId);
+    }
+
+    public static List<Playlist> getForTrack(Long trackId) {
+        try (Connection conn = DB.connect();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "SELECT * FROM playlists JOIN playlist_track ON playlist_track.PlaylistId = playlists.PlaylistId WHERE TrackId = ?"
+             )) {
+            stmt.setLong(1, trackId);
+            ResultSet results = stmt.executeQuery();
+            List<Playlist> resultList = new LinkedList<>();
+            while (results.next()) {
+                resultList.add(new Playlist(results));
+            }
+            return resultList;
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }
     }
 
     public Long getPlaylistId() {

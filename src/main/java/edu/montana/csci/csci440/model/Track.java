@@ -291,6 +291,7 @@ public class Track extends Model {
 
     public static List<Track> advancedSearch(int page, int count,
                                              String search, Integer artistId, Integer albumId,
+                                             Integer genreId, Integer mediaTypeId,
                                              Integer maxRuntime, Integer minRuntime) {
         LinkedList<Object> args = new LinkedList<>();
 
@@ -308,6 +309,16 @@ public class Track extends Model {
         if (albumId != null) {
             query += " AND albums.AlbumId=? ";
             args.add(albumId);
+        }
+
+        if (genreId != null) {
+            query += " AND GenreId=? ";
+            args.add(genreId);
+        }
+
+        if (mediaTypeId != null) {
+            query += " AND MediaTypeId=? ";
+            args.add(mediaTypeId);
         }
 
         if (maxRuntime != null) {

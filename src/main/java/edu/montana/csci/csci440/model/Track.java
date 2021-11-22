@@ -305,8 +305,24 @@ public class Track extends Model {
             args.add(artistId);
         }
 
-        query += " LIMIT ?";
+        if (albumId != null) {
+            query += " AND albums.AlbumId=? ";
+            args.add(albumId);
+        }
+
+        if (maxRuntime != null) {
+            query += " AND Milliseconds<=? ";
+            args.add(maxRuntime);
+        }
+
+        if (minRuntime != null) {
+            query += " AND Milliseconds>=? ";
+            args.add(minRuntime);
+        }
+
+        query += " LIMIT ? OFFSET ?";
         args.add(count);
+        args.add(count*(page-1));
 
         try (Connection conn = DB.connect();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -326,14 +342,13 @@ public class Track extends Model {
     }
 
     public static List<Track> search(int page, int count, String orderBy, String search) {
-        String query = "SELECT * FROM tracks WHERE name LIKE ? ORDER BY ? LIMIT ? OFFSET ?";
+        String query = "SELECT * FROM tracks WHERE name LIKE ? ORDER BY "+ orderBy + " LIMIT ? OFFSET ?";
         search = "%" + search + "%";
         try (Connection conn = DB.connect();
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, search);
-            stmt.setString(2, orderBy);
-            stmt.setInt(3, count);
-            stmt.setInt(4, count*(page-1));
+            stmt.setInt(2, count);
+            stmt.setInt(3, count*(page-1));
             ResultSet results = stmt.executeQuery();
             List<Track> resultList = new LinkedList<>();
             while (results.next()) {

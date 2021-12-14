@@ -7,7 +7,6 @@
     <tr>
         <th>Album ID</th>
         <th>Title</th>
-        <th>Tracks</th>
     </tr>
     </thead>
     <tbody>

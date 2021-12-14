@@ -152,3 +152,15 @@ WHERE employees.FirstName || employees.LastName = 'JanePeacock'
                                          JOIN tracks ON invoice_items.TrackId = tracks.TrackId
                                          JOIN genres ON tracks.GenreId = genres.GenreId
                                 WHERE genres.Name = 'Rock');
+
+SELECT tracks.TrackId, tracks.Name, tracks.AlbumId, tracks.MediaTypeId, tracks.GenreId, tracks.Milliseconds, tracks.Bytes, tracks.UnitPrice, artists.Name AS ArtistName, albums.Title AS AlbumTitle
+FROM tracks
+JOIN albums ON albums.AlbumId = tracks.AlbumId
+JOIN artists ON albums.ArtistId = artists.ArtistId
+;
+
+SELECT tracks.TrackId, tracks.Name, tracks.AlbumId, tracks.MediaTypeId, tracks.GenreId, tracks.Milliseconds, tracks.Bytes, tracks.UnitPrice, artists.Name AS ArtistName, albums.Title AS AlbumTitle
+FROM tracks
+JOIN albums ON albums.AlbumId = tracks.AlbumId
+JOIN artists ON albums.ArtistId = artists.ArtistId
+ORDER BY TrackId LIMIT 10 OFFSET 0

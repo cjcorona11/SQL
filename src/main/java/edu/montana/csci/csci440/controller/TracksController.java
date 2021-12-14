@@ -34,6 +34,7 @@ public class TracksController {
         get("/tracks", (req, resp) -> {
             String search = req.queryParams("q");
             String orderBy = req.queryParams("o");
+            if(orderBy == null) orderBy = "TrackId";
             List<Track> tracks;
             if (search != null) {
                 tracks = Track.search(Web.getPage(), Web.PAGE_SIZE, orderBy, search);

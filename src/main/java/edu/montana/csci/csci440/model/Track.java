@@ -313,7 +313,7 @@ public class Track extends Model {
 
         // Conditionally include the query and argument
         if (artistId != null) {
-            query += " AND ArtistId=? ";
+            query += " AND artists.ArtistId=? ";
             args.add(artistId);
         }
 

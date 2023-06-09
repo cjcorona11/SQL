@@ -14,4 +14,4 @@ To test out this web application, download the entire repository and do the foll
 3. Open a web browser and enter the following url, replacing XXXX with the server address from the previous step: "localhost:XXXX"
 4. Browse the web application
 
-Or to just view the SQL and/or Java code, navigate this repository to /sql-project/src/main/java/edu/montana/csci/csci440/model and find the various files corresponding to their web app pages.
+Or to just view the SQL and/or Java code, navigate this repository to /sql-project/src/main/java/edu/montana/csci/csci440/model and find the various files corresponding to their web app functions.

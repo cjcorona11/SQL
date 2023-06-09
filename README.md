@@ -9,8 +9,9 @@ This a school project for a Database Systems classthat demonstrates my proficien
 
 To test out this web application, download the entire repository and do the following:
 
-1. Run sql-project/src/main/java/edu/montana/csci
-/csci440/Server.java
+1. Run /sql-project/src/main/java/edu/montana/csci/csci440/Server.java
 2. Determine the address of the server from the output of running Server.java: "Started ServerConnector@285e598b{HTTP/1.1,[http/1.1]}{0.0.0.0:XXXX}". See screenshot "server-address.png"
 3. Open a web browser and enter the following url, replacing XXXX with the server address from the previous step: "localhost:XXXX"
 4. Browse the web application
+
+Or to just view the SQL and/or Java code, navigate this repository to /sql-project/src/main/java/edu/montana/csci/csci440/model and find the various files corresponding to their web app pages.
